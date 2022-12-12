@@ -14,7 +14,20 @@ class InteractionsScreenWidget extends StatefulWidget {
 }
 
 class _InteractionsScreenWidgetState extends State<InteractionsScreenWidget> {
+  TextEditingController? searchFieldController;
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    searchFieldController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    searchFieldController?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +67,69 @@ class _InteractionsScreenWidgetState extends State<InteractionsScreenWidget> {
                     style: FlutterFlowTheme.of(context).bodyText2,
                   ),
                 ],
+              ),
+            ),
+            Material(
+              color: Colors.transparent,
+              elevation: 0,
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: FlutterFlowTheme.of(context).secondaryBackground,
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 4,
+                      color: Color(0x430F1113),
+                      offset: Offset(0, 2),
+                    )
+                  ],
+                ),
+                child: Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(20, 4, 20, 0),
+                  child: TextFormField(
+                    controller: searchFieldController,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                      hintText: 'Type to search here...',
+                      hintStyle: FlutterFlowTheme.of(context).bodyText2,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: FlutterFlowTheme.of(context).primaryBackground,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: FlutterFlowTheme.of(context).primaryBackground,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(0x00000000),
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(0x00000000),
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      prefixIcon: Icon(
+                        Icons.search_rounded,
+                        color: Color(0xFF95A1AC),
+                      ),
+                    ),
+                    style: FlutterFlowTheme.of(context).bodyText1,
+                    maxLines: null,
+                  ),
+                ),
               ),
             ),
             Padding(

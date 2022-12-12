@@ -2,6 +2,7 @@ import '../auth/auth_util.dart';
 import '../backend/backend.dart';
 import '../backend/firebase_storage/storage.dart';
 import '../change_password/change_password_widget.dart';
+import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
@@ -72,18 +73,33 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
               ? AppBar(
                   backgroundColor: FlutterFlowTheme.of(context).primaryColor,
                   automaticallyImplyLeading: false,
+                  leading: FlutterFlowIconButton(
+                    borderColor: Colors.transparent,
+                    borderRadius: 30,
+                    borderWidth: 1,
+                    buttonSize: 60,
+                    icon: Icon(
+                      Icons.arrow_back_rounded,
+                      color: FlutterFlowTheme.of(context).skyBlueCrayola,
+                      size: 30,
+                    ),
+                    onPressed: () async {
+                      Navigator.pop(context);
+                    },
+                  ),
                   title: Text(
-                    'Welcome',
-                    style: FlutterFlowTheme.of(context).title1.override(
-                          fontFamily: FlutterFlowTheme.of(context).title1Family,
-                          color: FlutterFlowTheme.of(context).white,
+                    'Profile',
+                    style: FlutterFlowTheme.of(context).title2.override(
+                          fontFamily: FlutterFlowTheme.of(context).title2Family,
+                          color: FlutterFlowTheme.of(context).skyBlueCrayola,
+                          fontSize: 22,
                           useGoogleFonts: GoogleFonts.asMap().containsKey(
-                              FlutterFlowTheme.of(context).title1Family),
+                              FlutterFlowTheme.of(context).title2Family),
                         ),
                   ),
                   actions: [],
-                  centerTitle: false,
-                  elevation: 0,
+                  centerTitle: true,
+                  elevation: 2,
                 )
               : null,
           body: SafeArea(

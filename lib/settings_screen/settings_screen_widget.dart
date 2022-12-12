@@ -39,29 +39,35 @@ class _SettingsScreenWidgetState extends State<SettingsScreenWidget>
         desktop: false,
       )
           ? AppBar(
-              backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+              backgroundColor: FlutterFlowTheme.of(context).primaryColor,
               automaticallyImplyLeading: false,
-              actions: [
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
-                  child: FlutterFlowIconButton(
-                    borderColor: Colors.transparent,
-                    borderRadius: 30,
-                    borderWidth: 1,
-                    buttonSize: 60,
-                    icon: Icon(
-                      Icons.close_rounded,
-                      color: FlutterFlowTheme.of(context).secondaryText,
-                      size: 30,
-                    ),
-                    onPressed: () async {
-                      Navigator.pop(context);
-                    },
-                  ),
+              leading: FlutterFlowIconButton(
+                borderColor: Colors.transparent,
+                borderRadius: 30,
+                borderWidth: 1,
+                buttonSize: 60,
+                icon: Icon(
+                  Icons.arrow_back_rounded,
+                  color: FlutterFlowTheme.of(context).skyBlueCrayola,
+                  size: 30,
                 ),
-              ],
-              centerTitle: false,
-              elevation: 0,
+                onPressed: () async {
+                  Navigator.pop(context);
+                },
+              ),
+              title: Text(
+                'Setttings',
+                style: FlutterFlowTheme.of(context).title2.override(
+                      fontFamily: FlutterFlowTheme.of(context).title2Family,
+                      color: FlutterFlowTheme.of(context).skyBlueCrayola,
+                      fontSize: 22,
+                      useGoogleFonts: GoogleFonts.asMap().containsKey(
+                          FlutterFlowTheme.of(context).title2Family),
+                    ),
+              ),
+              actions: [],
+              centerTitle: true,
+              elevation: 2,
             )
           : null,
       body: SafeArea(
