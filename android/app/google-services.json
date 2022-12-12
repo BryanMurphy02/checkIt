@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "475611598615",
+    "firebase_url": "https://checkit-application-default-rtdb.firebaseio.com",
+    "project_id": "checkit-application",
+    "storage_bucket": "checkit-application.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:475611598615:android:ec73475fb8231ee513f152",
+        "android_client_info": {
+          "package_name": "check.it"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "475611598615-r27nckuh7nqdcu9gp71j0rluj1cd7vtj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "check.it",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "475611598615-18a1gkb00k2r9gp9fv3od02o3tc86t25.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpw4Ukr-Re1lkYZWsDXBncncbFpRu-mLE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "475611598615-18a1gkb00k2r9gp9fv3od02o3tc86t25.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "475611598615-klfc5jndt6iva18hh819bavc7blsfk2g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "check.it"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
