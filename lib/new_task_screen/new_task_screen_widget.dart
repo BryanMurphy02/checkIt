@@ -335,21 +335,15 @@ class _NewTaskScreenWidgetState extends State<NewTaskScreenWidget> {
                                 initialOption: subjectSelectValue ??= '',
                                 options: newTaskScreenTaskSubjectRecordList
                                     .map((e) => valueOrDefault<String>(
-                                          e.title!,
+                                          e.taskSubjectID!,
                                           'Subject',
                                         ))
                                     .toList()
                                     .toList(),
                                 optionLabels: newTaskScreenTaskSubjectRecordList
-                                    .where((e) =>
-                                        e.subjectMemberList!
-                                            .toList()
-                                            .contains(currentUserReference) ==
-                                        true)
-                                    .toList()
                                     .map((e) => valueOrDefault<String>(
-                                          e.taskSubjectID!,
-                                          'none',
+                                          e.title!,
+                                          'Subject',
                                         ))
                                     .toList()
                                     .toList(),

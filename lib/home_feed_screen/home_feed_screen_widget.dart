@@ -3,7 +3,7 @@ import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_toggle_icon.dart';
 import '../flutter_flow/flutter_flow_util.dart';
-import '../search_screen/search_screen_widget.dart';
+import '../main.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -107,7 +107,8 @@ class _HomeFeedScreenWidgetState extends State<HomeFeedScreenWidget> {
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => SearchScreenWidget(),
+                                  builder: (context) => NavBarPage(
+                                      initialPage: 'InteractionsScreen'),
                                 ),
                               );
                             },

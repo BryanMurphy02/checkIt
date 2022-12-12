@@ -5,7 +5,6 @@ export 'login/login_widget.dart' show LoginWidget;
 export 'my_profile/my_profile_widget.dart' show MyProfileWidget;
 export 'home_feed_screen/home_feed_screen_widget.dart'
     show HomeFeedScreenWidget;
-export 'search_screen/search_screen_widget.dart' show SearchScreenWidget;
 export 'new_task_screen/new_task_screen_widget.dart' show NewTaskScreenWidget;
 export 'change_password/change_password_widget.dart' show ChangePasswordWidget;
 export 'settings_screen/settings_screen_widget.dart' show SettingsScreenWidget;
