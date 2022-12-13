@@ -11,8 +11,6 @@ abstract class TaskCommentRecord
   static Serializer<TaskCommentRecord> get serializer =>
       _$taskCommentRecordSerializer;
 
-  String? get taskCommentID;
-
   String? get commentText;
 
   DateTime? get createdDatetime;
@@ -25,9 +23,8 @@ abstract class TaskCommentRecord
   DocumentReference? get ffRef;
   DocumentReference get reference => ffRef!;
 
-  static void _initializeBuilder(TaskCommentRecordBuilder builder) => builder
-    ..taskCommentID = ''
-    ..commentText = '';
+  static void _initializeBuilder(TaskCommentRecordBuilder builder) =>
+      builder..commentText = '';
 
   static CollectionReference get collection =>
       FirebaseFirestore.instance.collection('taskComment');
@@ -51,7 +48,6 @@ abstract class TaskCommentRecord
 }
 
 Map<String, dynamic> createTaskCommentRecordData({
-  String? taskCommentID,
   String? commentText,
   DateTime? createdDatetime,
   DocumentReference? userTaskID,
@@ -61,7 +57,6 @@ Map<String, dynamic> createTaskCommentRecordData({
     TaskCommentRecord.serializer,
     TaskCommentRecord(
       (t) => t
-        ..taskCommentID = taskCommentID
         ..commentText = commentText
         ..createdDatetime = createdDatetime
         ..userTaskID = userTaskID

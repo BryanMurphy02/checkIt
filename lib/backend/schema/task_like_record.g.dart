@@ -21,13 +21,6 @@ class _$TaskLikeRecordSerializer
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object?>[];
     Object? value;
-    value = object.taskLikeID;
-    if (value != null) {
-      result
-        ..add('taskLikeID')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
     value = object.createdDatetime;
     if (value != null) {
       result
@@ -74,10 +67,6 @@ class _$TaskLikeRecordSerializer
       iterator.moveNext();
       final Object? value = iterator.current;
       switch (key) {
-        case 'taskLikeID':
-          result.taskLikeID = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
         case 'createdDatetime':
           result.createdDatetime = serializers.deserialize(value,
               specifiedType: const FullType(DateTime)) as DateTime?;
@@ -109,8 +98,6 @@ class _$TaskLikeRecordSerializer
 
 class _$TaskLikeRecord extends TaskLikeRecord {
   @override
-  final String? taskLikeID;
-  @override
   final DateTime? createdDatetime;
   @override
   final DocumentReference<Object?>? userID;
@@ -123,11 +110,7 @@ class _$TaskLikeRecord extends TaskLikeRecord {
       (new TaskLikeRecordBuilder()..update(updates))._build();
 
   _$TaskLikeRecord._(
-      {this.taskLikeID,
-      this.createdDatetime,
-      this.userID,
-      this.userTaskID,
-      this.ffRef})
+      {this.createdDatetime, this.userID, this.userTaskID, this.ffRef})
       : super._();
 
   @override
@@ -142,7 +125,6 @@ class _$TaskLikeRecord extends TaskLikeRecord {
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is TaskLikeRecord &&
-        taskLikeID == other.taskLikeID &&
         createdDatetime == other.createdDatetime &&
         userID == other.userID &&
         userTaskID == other.userTaskID &&
@@ -152,9 +134,7 @@ class _$TaskLikeRecord extends TaskLikeRecord {
   @override
   int get hashCode {
     return $jf($jc(
-        $jc(
-            $jc($jc($jc(0, taskLikeID.hashCode), createdDatetime.hashCode),
-                userID.hashCode),
+        $jc($jc($jc(0, createdDatetime.hashCode), userID.hashCode),
             userTaskID.hashCode),
         ffRef.hashCode));
   }
@@ -162,7 +142,6 @@ class _$TaskLikeRecord extends TaskLikeRecord {
   @override
   String toString() {
     return (newBuiltValueToStringHelper(r'TaskLikeRecord')
-          ..add('taskLikeID', taskLikeID)
           ..add('createdDatetime', createdDatetime)
           ..add('userID', userID)
           ..add('userTaskID', userTaskID)
@@ -174,10 +153,6 @@ class _$TaskLikeRecord extends TaskLikeRecord {
 class TaskLikeRecordBuilder
     implements Builder<TaskLikeRecord, TaskLikeRecordBuilder> {
   _$TaskLikeRecord? _$v;
-
-  String? _taskLikeID;
-  String? get taskLikeID => _$this._taskLikeID;
-  set taskLikeID(String? taskLikeID) => _$this._taskLikeID = taskLikeID;
 
   DateTime? _createdDatetime;
   DateTime? get createdDatetime => _$this._createdDatetime;
@@ -204,7 +179,6 @@ class TaskLikeRecordBuilder
   TaskLikeRecordBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
-      _taskLikeID = $v.taskLikeID;
       _createdDatetime = $v.createdDatetime;
       _userID = $v.userID;
       _userTaskID = $v.userTaskID;
@@ -231,7 +205,6 @@ class TaskLikeRecordBuilder
   _$TaskLikeRecord _build() {
     final _$result = _$v ??
         new _$TaskLikeRecord._(
-            taskLikeID: taskLikeID,
             createdDatetime: createdDatetime,
             userID: userID,
             userTaskID: userTaskID,

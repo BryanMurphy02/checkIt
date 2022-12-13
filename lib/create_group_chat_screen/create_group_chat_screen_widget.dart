@@ -1,8 +1,10 @@
+import '../auth/auth_util.dart';
 import '../backend/backend.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -25,18 +27,18 @@ class _CreateGroupChatScreenWidgetState
           .map((e) => e.key)
           .toList();
 
-  TextEditingController? textController;
+  TextEditingController? searchController;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    textController = TextEditingController();
+    searchController = TextEditingController();
   }
 
   @override
   void dispose() {
-    textController?.dispose();
+    searchController?.dispose();
     super.dispose();
   }
 
@@ -74,7 +76,7 @@ class _CreateGroupChatScreenWidgetState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Create Group Chat',
+                    'Create Chat',
                     style: FlutterFlowTheme.of(context).subtitle1.override(
                           fontFamily: 'Lexend Deca',
                           color: FlutterFlowTheme.of(context).tertiaryColor,
@@ -121,7 +123,7 @@ class _CreateGroupChatScreenWidgetState
             ),
             alignment: AlignmentDirectional(0, 0),
             child: TextFormField(
-              controller: textController,
+              controller: searchController,
               obscureText: false,
               decoration: InputDecoration(
                 hintStyle: FlutterFlowTheme.of(context).bodyText1.override(
@@ -195,6 +197,9 @@ class _CreateGroupChatScreenWidgetState
           Expanded(
             child: StreamBuilder<List<UsersRecord>>(
               stream: queryUsersRecord(
+                queryBuilder: (usersRecord) => usersRecord
+                    .where('friendlist', arrayContains: currentUserReference)
+                    .where('givenName', isEqualTo: searchController!.text),
                 limit: 50,
               ),
               builder: (context, snapshot) {
@@ -211,7 +216,9 @@ class _CreateGroupChatScreenWidgetState
                     ),
                   );
                 }
-                List<UsersRecord> listViewUsersRecordList = snapshot.data!;
+                List<UsersRecord> listViewUsersRecordList = snapshot.data!
+                    .where((u) => u.uid != currentUserUid)
+                    .toList();
                 return ListView.builder(
                   padding: EdgeInsets.zero,
                   shrinkWrap: true,
@@ -268,50 +275,80 @@ class _CreateGroupChatScreenWidgetState
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       2, 0, 0, 0),
-                                  child: CheckboxListTile(
-                                    value: checkboxListTileValueMap[
-                                        listViewUsersRecord] ??= false,
-                                    onChanged: (newValue) async {
-                                      setState(() => checkboxListTileValueMap[
-                                          listViewUsersRecord] = newValue!);
-                                    },
-                                    title: Text(
-                                      listViewUsersRecord.displayName!,
-                                      style: FlutterFlowTheme.of(context)
-                                          .subtitle1
-                                          .override(
-                                            fontFamily: 'Lexend Deca',
-                                            color: Color(0xFF95A1AC),
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500,
-                                            useGoogleFonts: GoogleFonts.asMap()
-                                                .containsKey(
-                                                    FlutterFlowTheme.of(context)
-                                                        .subtitle1Family),
-                                          ),
+                                  child: Theme(
+                                    data: ThemeData(
+                                      checkboxTheme: CheckboxThemeData(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(25),
+                                        ),
+                                      ),
+                                      unselectedWidgetColor:
+                                          FlutterFlowTheme.of(context)
+                                              .cornflowerBlue,
                                     ),
-                                    subtitle: Text(
-                                      listViewUsersRecord.givenName!,
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyText2
-                                          .override(
-                                            fontFamily: 'Lexend Deca',
-                                            color: Color(0xFF1A1F24),
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.normal,
-                                            useGoogleFonts: GoogleFonts.asMap()
-                                                .containsKey(
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyText2Family),
-                                          ),
+                                    child: CheckboxListTile(
+                                      value: checkboxListTileValueMap[
+                                          listViewUsersRecord] ??= FFAppState()
+                                              .userChatList
+                                              .contains(listViewUsersRecord
+                                                  .reference) ==
+                                          true,
+                                      onChanged: (newValue) async {
+                                        setState(() => checkboxListTileValueMap[
+                                            listViewUsersRecord] = newValue!);
+                                      },
+                                      title: Text(
+                                        listViewUsersRecord.displayName!,
+                                        style: FlutterFlowTheme.of(context)
+                                            .subtitle1
+                                            .override(
+                                              fontFamily: 'Lexend Deca',
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .skyBlueCrayola,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w500,
+                                              useGoogleFonts:
+                                                  GoogleFonts.asMap()
+                                                      .containsKey(
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .subtitle1Family),
+                                            ),
+                                      ),
+                                      subtitle: Text(
+                                        '${listViewUsersRecord.givenName} ${listViewUsersRecord.surname}',
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyText2
+                                            .override(
+                                              fontFamily: 'Lexend Deca',
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .polishedPine,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.normal,
+                                              useGoogleFonts:
+                                                  GoogleFonts.asMap()
+                                                      .containsKey(
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyText2Family),
+                                            ),
+                                      ),
+                                      tileColor:
+                                          FlutterFlowTheme.of(context).darkBG,
+                                      activeColor: FlutterFlowTheme.of(context)
+                                          .cornflowerBlue,
+                                      checkColor: FlutterFlowTheme.of(context)
+                                          .polishedPine,
+                                      dense: false,
+                                      controlAffinity:
+                                          ListTileControlAffinity.trailing,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
                                     ),
-                                    tileColor:
-                                        FlutterFlowTheme.of(context).darkBG,
-                                    activeColor:
-                                        FlutterFlowTheme.of(context).darkBG,
-                                    dense: false,
-                                    controlAffinity:
-                                        ListTileControlAffinity.trailing,
                                   ),
                                 ),
                               ),
@@ -325,52 +362,69 @@ class _CreateGroupChatScreenWidgetState
               },
             ),
           ),
-          Container(
-            width: double.infinity,
-            height: 100,
-            decoration: BoxDecoration(
-              color: FlutterFlowTheme.of(context).skyBlueCrayola,
-              boxShadow: [
-                BoxShadow(
-                  blurRadius: 4,
-                  color: Color(0x3314181B),
-                  offset: Offset(0, -2),
-                )
-              ],
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(0),
-                bottomRight: Radius.circular(0),
-                topLeft: Radius.circular(16),
-                topRight: Radius.circular(16),
+          if (checkboxListTileCheckedItems.length >= 1)
+            Container(
+              width: double.infinity,
+              height: 100,
+              decoration: BoxDecoration(
+                color: FlutterFlowTheme.of(context).skyBlueCrayola,
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 4,
+                    color: Color(0x3314181B),
+                    offset: Offset(0, -2),
+                  )
+                ],
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(0),
+                  bottomRight: Radius.circular(0),
+                  topLeft: Radius.circular(16),
+                  topRight: Radius.circular(16),
+                ),
               ),
-            ),
-            child: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 34),
-              child: FFButtonWidget(
-                onPressed: () {
-                  print('Button pressed ...');
-                },
-                text: 'Create Chat',
-                options: FFButtonOptions(
-                  width: 130,
-                  height: 40,
-                  color: FlutterFlowTheme.of(context).skyBlueCrayola,
-                  textStyle: FlutterFlowTheme.of(context).title3.override(
-                        fontFamily: 'Lexend Deca',
-                        color: FlutterFlowTheme.of(context).primaryText,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                        useGoogleFonts: GoogleFonts.asMap().containsKey(
-                            FlutterFlowTheme.of(context).title3Family),
+              child: Visibility(
+                visible: FFAppState().userChatList.length >= 1,
+                child: Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 34),
+                  child: FFButtonWidget(
+                    onPressed: () async {
+                      setState(() {
+                        FFAppState().userChatList = checkboxListTileCheckedItems
+                            .map((e) => e.reference)
+                            .toList();
+                      });
+                      setState(() {
+                        setState(() => FFAppState()
+                            .addToUserChatList(currentUserReference!));
+                      });
+
+                      final chatsCreateData = {
+                        'users': FFAppState().userChatList,
+                      };
+                      await ChatsRecord.collection.doc().set(chatsCreateData);
+                    },
+                    text: 'Create Chat',
+                    options: FFButtonOptions(
+                      width: 130,
+                      height: 40,
+                      color: FlutterFlowTheme.of(context).skyBlueCrayola,
+                      textStyle: FlutterFlowTheme.of(context).title3.override(
+                            fontFamily: 'Lexend Deca',
+                            color: FlutterFlowTheme.of(context).primaryText,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                            useGoogleFonts: GoogleFonts.asMap().containsKey(
+                                FlutterFlowTheme.of(context).title3Family),
+                          ),
+                      borderSide: BorderSide(
+                        color: Colors.transparent,
+                        width: 1,
                       ),
-                  borderSide: BorderSide(
-                    color: Colors.transparent,
-                    width: 1,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );

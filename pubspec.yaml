@@ -75,7 +75,6 @@ dependencies:
   sign_in_with_apple_web: 1.0.1
   sqflite: 2.2.0+2
   styled_divider: 1.0.4
-  table_calendar: 3.0.6
   timeago: 3.2.2
   url_launcher: 6.1.5
 

@@ -11,8 +11,6 @@ abstract class TaskLikeRecord
   static Serializer<TaskLikeRecord> get serializer =>
       _$taskLikeRecordSerializer;
 
-  String? get taskLikeID;
-
   DateTime? get createdDatetime;
 
   DocumentReference? get userID;
@@ -23,8 +21,7 @@ abstract class TaskLikeRecord
   DocumentReference? get ffRef;
   DocumentReference get reference => ffRef!;
 
-  static void _initializeBuilder(TaskLikeRecordBuilder builder) =>
-      builder..taskLikeID = '';
+  static void _initializeBuilder(TaskLikeRecordBuilder builder) => builder;
 
   static CollectionReference get collection =>
       FirebaseFirestore.instance.collection('taskLike');
@@ -48,7 +45,6 @@ abstract class TaskLikeRecord
 }
 
 Map<String, dynamic> createTaskLikeRecordData({
-  String? taskLikeID,
   DateTime? createdDatetime,
   DocumentReference? userID,
   DocumentReference? userTaskID,
@@ -57,7 +53,6 @@ Map<String, dynamic> createTaskLikeRecordData({
     TaskLikeRecord.serializer,
     TaskLikeRecord(
       (t) => t
-        ..taskLikeID = taskLikeID
         ..createdDatetime = createdDatetime
         ..userID = userID
         ..userTaskID = userTaskID,
