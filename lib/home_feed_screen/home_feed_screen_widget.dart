@@ -1,3 +1,4 @@
+import '../auth/auth_util.dart';
 import '../backend/backend.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -5,6 +6,7 @@ import '../flutter_flow/flutter_flow_toggle_icon.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../main.dart';
 import 'package:flip_card/flip_card.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -163,301 +165,551 @@ class _HomeFeedScreenWidgetState extends State<HomeFeedScreenWidget> {
                           return Padding(
                             padding:
                                 EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width * 0.94,
-                              decoration: BoxDecoration(),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0, 0, 2, 0),
-                                    child: FutureBuilder<UsersRecord>(
-                                      future: UsersRecord.getDocumentOnce(
-                                          socialFeedDUserTaskRecord.userID!),
-                                      builder: (context, snapshot) {
-                                        // Customize what your widget looks like when it's loading.
-                                        if (!snapshot.hasData) {
-                                          return Center(
-                                            child: SizedBox(
-                                              width: 50,
-                                              height: 50,
-                                              child: SpinKitFadingCircle(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
+                            child: StreamBuilder<List<TaskLikeRecord>>(
+                              stream: queryTaskLikeRecord(
+                                queryBuilder: (taskLikeRecord) =>
+                                    taskLikeRecord.where('userID',
+                                        isEqualTo:
+                                            socialFeedDUserTaskRecord.userID),
+                                singleRecord: true,
+                              ),
+                              builder: (context, snapshot) {
+                                // Customize what your widget looks like when it's loading.
+                                if (!snapshot.hasData) {
+                                  return Center(
+                                    child: SizedBox(
+                                      width: 50,
+                                      height: 50,
+                                      child: SpinKitFadingCircle(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryColor,
+                                        size: 50,
+                                      ),
+                                    ),
+                                  );
+                                }
+                                List<TaskLikeRecord>
+                                    userPostTaskLikeRecordList = snapshot.data!;
+                                // Return an empty Container when the document does not exist.
+                                if (snapshot.data!.isEmpty) {
+                                  return Container();
+                                }
+                                final userPostTaskLikeRecord =
+                                    userPostTaskLikeRecordList.isNotEmpty
+                                        ? userPostTaskLikeRecordList.first
+                                        : null;
+                                return Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.94,
+                                  decoration: BoxDecoration(),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0, 0, 2, 0),
+                                        child: FutureBuilder<UsersRecord>(
+                                          future: UsersRecord.getDocumentOnce(
+                                              socialFeedDUserTaskRecord
+                                                  .userID!),
+                                          builder: (context, snapshot) {
+                                            // Customize what your widget looks like when it's loading.
+                                            if (!snapshot.hasData) {
+                                              return Center(
+                                                child: SizedBox(
+                                                  width: 50,
+                                                  height: 50,
+                                                  child: SpinKitFadingCircle(
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
                                                         .primaryColor,
-                                                size: 50,
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                        final userInfoUsersRecord =
-                                            snapshot.data!;
-                                        return Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            Card(
-                                              clipBehavior:
-                                                  Clip.antiAliasWithSaveLayer,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryColor,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(1, 1, 1, 1),
-                                                child: Container(
-                                                  width: 40,
-                                                  height: 40,
-                                                  clipBehavior: Clip.antiAlias,
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                  ),
-                                                  child: Image.network(
-                                                    userInfoUsersRecord
-                                                        .photoUrl!,
-                                                    fit: BoxFit.fitWidth,
+                                                    size: 50,
                                                   ),
                                                 ),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Padding(
+                                              );
+                                            }
+                                            final userInfoUsersRecord =
+                                                snapshot.data!;
+                                            return Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Card(
+                                                  clipBehavior: Clip
+                                                      .antiAliasWithSaveLayer,
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primaryColor,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                  ),
+                                                  child: Padding(
                                                     padding:
                                                         EdgeInsetsDirectional
                                                             .fromSTEB(
-                                                                12, 0, 0, 0),
-                                                    child: Text(
-                                                      userInfoUsersRecord
-                                                          .displayName!,
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
+                                                                1, 1, 1, 1),
+                                                    child: Container(
+                                                      width: 40,
+                                                      height: 40,
+                                                      clipBehavior:
+                                                          Clip.antiAlias,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      child: Image.network(
+                                                        userInfoUsersRecord
+                                                            .photoUrl!,
+                                                        fit: BoxFit.fitWidth,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(12, 0,
+                                                                    0, 0),
+                                                        child: Text(
+                                                          userInfoUsersRecord
+                                                              .displayName!,
+                                                          style: FlutterFlowTheme
+                                                                  .of(context)
                                                               .bodyText1,
-                                                    ),
-                                                  ),
-                                                  FlutterFlowIconButton(
-                                                    borderColor:
-                                                        Colors.transparent,
-                                                    borderRadius: 30,
-                                                    buttonSize: 46,
-                                                    icon: Icon(
-                                                      Icons.keyboard_control,
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
+                                                        ),
+                                                      ),
+                                                      FlutterFlowIconButton(
+                                                        borderColor:
+                                                            Colors.transparent,
+                                                        borderRadius: 30,
+                                                        buttonSize: 46,
+                                                        icon: Icon(
+                                                          Icons
+                                                              .keyboard_control,
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
                                                               .gray600,
-                                                      size: 20,
-                                                    ),
-                                                    onPressed: () {
-                                                      print(
-                                                          'IconButton pressed ...');
-                                                    },
+                                                          size: 20,
+                                                        ),
+                                                        onPressed: () {
+                                                          print(
+                                                              'IconButton pressed ...');
+                                                        },
+                                                      ),
+                                                    ],
                                                   ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  FlipCard(
-                                    fill: Fill.fillBack,
-                                    direction: FlipDirection.HORIZONTAL,
-                                    speed: 400,
-                                    front: Container(
-                                      height: 250,
-                                      decoration: BoxDecoration(
-                                        color: FlutterFlowTheme.of(context)
-                                            .tertiaryColor,
-                                        borderRadius: BorderRadius.circular(12),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        ),
                                       ),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          Align(
-                                            alignment:
-                                                AlignmentDirectional(0, 0),
-                                            child: Text(
-                                              socialFeedDUserTaskRecord.title!,
-                                              style:
-                                                  FlutterFlowTheme.of(context)
+                                      FlipCard(
+                                        fill: Fill.fillBack,
+                                        direction: FlipDirection.HORIZONTAL,
+                                        speed: 400,
+                                        front: Container(
+                                          height: 250,
+                                          decoration: BoxDecoration(
+                                            color: FlutterFlowTheme.of(context)
+                                                .tertiaryColor,
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: [
+                                              Align(
+                                                alignment:
+                                                    AlignmentDirectional(0, 0),
+                                                child: Text(
+                                                  socialFeedDUserTaskRecord
+                                                      .title!,
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
                                                       .title1,
-                                            ),
-                                          ),
-                                          Text(
-                                            socialFeedDUserTaskRecord
-                                                    .isCompleted!
-                                                ? 'Completed'
-                                                : 'Not Complete',
-                                            style: FlutterFlowTheme.of(context)
-                                                .title3,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    back: Container(
-                                      width: 390,
-                                      height: 250,
-                                      decoration: BoxDecoration(
-                                        color: FlutterFlowTheme.of(context)
-                                            .tertiaryColor,
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            12, 16, 12, 16),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Align(
-                                              alignment:
-                                                  AlignmentDirectional(0, 0),
-                                              child: Text(
+                                                ),
+                                              ),
+                                              Text(
                                                 socialFeedDUserTaskRecord
-                                                    .description!,
+                                                        .isCompleted!
+                                                    ? 'Completed'
+                                                    : 'Not Complete',
                                                 style:
                                                     FlutterFlowTheme.of(context)
                                                         .title3,
                                               ),
+                                            ],
+                                          ),
+                                        ),
+                                        back: Container(
+                                          width: 390,
+                                          height: 250,
+                                          decoration: BoxDecoration(
+                                            color: FlutterFlowTheme.of(context)
+                                                .tertiaryColor,
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          child: Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    12, 16, 12, 16),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0, 0),
+                                                  child: Text(
+                                                    socialFeedDUserTaskRecord
+                                                        .description!,
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .title3,
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(12, 0, 12, 0),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(0, 0,
+                                                                    12, 0),
+                                                        child: Text(
+                                                          socialFeedDUserTaskRecord
+                                                              .datetime!
+                                                              .toString(),
+                                                          style: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .title3,
+                                                        ),
+                                                      ),
+                                                      if (socialFeedDUserTaskRecord
+                                                              .location !=
+                                                          null)
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(12,
+                                                                      0, 0, 0),
+                                                          child: Text(
+                                                            socialFeedDUserTaskRecord
+                                                                .location!
+                                                                .toString(),
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .title3,
+                                                          ),
+                                                        ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(12, 0, 12, 0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  Text(
-                                                    socialFeedDUserTaskRecord
-                                                        .datetime!
-                                                        .toString(),
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .title3,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0, 4, 8, 0),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(0, 0, 16, 0),
+                                                  child: InkWell(
+                                                    onTap: () async {
+                                                      if (socialFeedDUserTaskRecord
+                                                              .isLIked! &&
+                                                          !(userPostTaskLikeRecord !=
+                                                              null)) {
+                                                        final taskLikeCreateData =
+                                                            {
+                                                          ...createTaskLikeRecordData(
+                                                            userID:
+                                                                currentUserReference,
+                                                            userTaskID:
+                                                                socialFeedDUserTaskRecord
+                                                                    .reference,
+                                                          ),
+                                                          'createdDatetime':
+                                                              FieldValue
+                                                                  .serverTimestamp(),
+                                                        };
+                                                        await TaskLikeRecord
+                                                            .collection
+                                                            .doc()
+                                                            .set(
+                                                                taskLikeCreateData);
+
+                                                        final userTaskUpdateData =
+                                                            {
+                                                          'amountOfLikes':
+                                                              FieldValue
+                                                                  .increment(1),
+                                                        };
+                                                        await socialFeedDUserTaskRecord
+                                                            .reference
+                                                            .update(
+                                                                userTaskUpdateData);
+                                                      } else {
+                                                        await userPostTaskLikeRecord!
+                                                            .reference
+                                                            .delete();
+
+                                                        final userTaskUpdateData =
+                                                            {
+                                                          'amountOfLikes':
+                                                              FieldValue
+                                                                  .increment(
+                                                                      -(1)),
+                                                        };
+                                                        await socialFeedDUserTaskRecord
+                                                            .reference
+                                                            .update(
+                                                                userTaskUpdateData);
+                                                      }
+                                                    },
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      children: [
+                                                        ToggleIcon(
+                                                          onPressed: () async {
+                                                            final userTaskUpdateData =
+                                                                {
+                                                              'isLIked':
+                                                                  !socialFeedDUserTaskRecord
+                                                                      .isLIked!,
+                                                            };
+                                                            await socialFeedDUserTaskRecord
+                                                                .reference
+                                                                .update(
+                                                                    userTaskUpdateData);
+                                                          },
+                                                          value:
+                                                              socialFeedDUserTaskRecord
+                                                                  .isLIked!,
+                                                          onIcon: Icon(
+                                                            Icons
+                                                                .favorite_rounded,
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primaryColor,
+                                                            size: 25,
+                                                          ),
+                                                          offIcon: Icon(
+                                                            Icons
+                                                                .favorite_border,
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .grayIcon,
+                                                            size: 25,
+                                                          ),
+                                                        ),
+                                                        if (socialFeedDUserTaskRecord
+                                                                .amountOfLikes! >
+                                                            0)
+                                                          Padding(
+                                                            padding:
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        4,
+                                                                        0,
+                                                                        0,
+                                                                        0),
+                                                            child: Text(
+                                                              socialFeedDUserTaskRecord
+                                                                  .amountOfLikes!
+                                                                  .toString(),
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .bodyText2,
+                                                            ),
+                                                          ),
+                                                      ],
+                                                    ),
                                                   ),
-                                                  Text(
-                                                    socialFeedDUserTaskRecord
-                                                        .location!
-                                                        .toString(),
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .title3,
+                                                ),
+                                              ],
+                                            ),
+                                            if (socialFeedDUserTaskRecord
+                                                    .scope! >=
+                                                2)
+                                              Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(4, 0, 0, 0),
+                                                child: InkWell(
+                                                  onTap: () async {
+                                                    if (socialFeedDUserTaskRecord
+                                                            .userList!
+                                                            .toList()
+                                                            .length <
+                                                        socialFeedDUserTaskRecord
+                                                            .userLimit!) {
+                                                      if (socialFeedDUserTaskRecord
+                                                              .isJoinable! &&
+                                                          !socialFeedDUserTaskRecord
+                                                              .userList!
+                                                              .toList()
+                                                              .contains(
+                                                                  currentUserReference)) {
+                                                        final taskSubjectUpdateData =
+                                                            {
+                                                          'subjectMemberList':
+                                                              FieldValue
+                                                                  .arrayUnion([
+                                                            currentUserReference
+                                                          ]),
+                                                        };
+                                                        await socialFeedDUserTaskRecord
+                                                            .taskSubjectID!
+                                                            .update(
+                                                                taskSubjectUpdateData);
+
+                                                        final userTaskUpdateData =
+                                                            {
+                                                          'userList': FieldValue
+                                                              .arrayUnion([
+                                                            currentUserReference
+                                                          ]),
+                                                        };
+                                                        await socialFeedDUserTaskRecord
+                                                            .reference
+                                                            .update(
+                                                                userTaskUpdateData);
+                                                      } else {
+                                                        final taskSubjectUpdateData =
+                                                            {
+                                                          'subjectMemberList':
+                                                              FieldValue
+                                                                  .arrayRemove([
+                                                            currentUserReference
+                                                          ]),
+                                                        };
+                                                        await socialFeedDUserTaskRecord
+                                                            .taskSubjectID!
+                                                            .update(
+                                                                taskSubjectUpdateData);
+
+                                                        final userTaskUpdateData =
+                                                            {
+                                                          'userList': FieldValue
+                                                              .arrayRemove([
+                                                            currentUserReference
+                                                          ]),
+                                                        };
+                                                        await socialFeedDUserTaskRecord
+                                                            .reference
+                                                            .update(
+                                                                userTaskUpdateData);
+                                                      }
+                                                    } else {
+                                                      await showDialog(
+                                                        context: context,
+                                                        builder:
+                                                            (alertDialogContext) {
+                                                          return AlertDialog(
+                                                            title: Text(
+                                                                'At Capacity'),
+                                                            content: Text(
+                                                                'Too many people have joined this task!'),
+                                                            actions: [
+                                                              TextButton(
+                                                                onPressed: () =>
+                                                                    Navigator.pop(
+                                                                        alertDialogContext),
+                                                                child:
+                                                                    Text('Ok'),
+                                                              ),
+                                                            ],
+                                                          );
+                                                        },
+                                                      );
+                                                    }
+                                                  },
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(45, 0,
+                                                                    0, 0),
+                                                        child: ToggleIcon(
+                                                          onPressed: () async {
+                                                            final userTaskUpdateData =
+                                                                {
+                                                              'isJoinable':
+                                                                  !socialFeedDUserTaskRecord
+                                                                      .isJoinable!,
+                                                            };
+                                                            await socialFeedDUserTaskRecord
+                                                                .reference
+                                                                .update(
+                                                                    userTaskUpdateData);
+                                                          },
+                                                          value:
+                                                              socialFeedDUserTaskRecord
+                                                                  .isJoinable!,
+                                                          onIcon: Icon(
+                                                            Icons
+                                                                .playlist_add_check_outlined,
+                                                            color: Color(
+                                                                0xFF70A288),
+                                                            size: 25,
+                                                          ),
+                                                          offIcon: Icon(
+                                                            Icons.playlist_add,
+                                                            color: Color(
+                                                                0xFF95A1AC),
+                                                            size: 25,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
-                                                ],
+                                                ),
                                               ),
-                                            ),
                                           ],
                                         ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0, 4, 8, 0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 0, 16, 0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  ToggleIcon(
-                                                    onPressed: () async {
-                                                      final userTaskUpdateData =
-                                                          {
-                                                        'isLIked':
-                                                            !socialFeedDUserTaskRecord
-                                                                .isLIked!,
-                                                      };
-                                                      await socialFeedDUserTaskRecord
-                                                          .reference
-                                                          .update(
-                                                              userTaskUpdateData);
-                                                    },
-                                                    value:
-                                                        socialFeedDUserTaskRecord
-                                                            .isLIked!,
-                                                    onIcon: Icon(
-                                                      Icons.favorite_rounded,
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primaryColor,
-                                                      size: 25,
-                                                    ),
-                                                    offIcon: Icon(
-                                                      Icons.favorite_border,
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .grayIcon,
-                                                      size: 25,
-                                                    ),
-                                                  ),
-                                                  if (socialFeedDUserTaskRecord
-                                                          .amountOfLikes! >
-                                                      0)
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  4, 0, 0, 0),
-                                                      child: Text(
-                                                        socialFeedDUserTaskRecord
-                                                            .amountOfLikes!
-                                                            .toString(),
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyText2,
-                                                      ),
-                                                    ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            Icon(
-                                              Icons.ios_share,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .grayIcon,
-                                              size: 24,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                );
+                              },
                             ),
                           );
                         },
@@ -547,290 +799,539 @@ class _HomeFeedScreenWidgetState extends State<HomeFeedScreenWidget> {
                             _pagingController!.itemList![socialFeedFGIndex];
                         return Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.94,
-                            decoration: BoxDecoration(),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      0, 0, 2, 0),
-                                  child: FutureBuilder<UsersRecord>(
-                                    future: UsersRecord.getDocumentOnce(
-                                        socialFeedFGUserTaskRecord.userID!),
-                                    builder: (context, snapshot) {
-                                      // Customize what your widget looks like when it's loading.
-                                      if (!snapshot.hasData) {
-                                        return Center(
-                                          child: SizedBox(
-                                            width: 50,
-                                            height: 50,
-                                            child: SpinKitFadingCircle(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
+                          child: FutureBuilder<List<TaskLikeRecord>>(
+                            future: queryTaskLikeRecordOnce(
+                              queryBuilder: (taskLikeRecord) =>
+                                  taskLikeRecord.where('userID',
+                                      isEqualTo: currentUserReference),
+                              singleRecord: true,
+                            ),
+                            builder: (context, snapshot) {
+                              // Customize what your widget looks like when it's loading.
+                              if (!snapshot.hasData) {
+                                return Center(
+                                  child: SizedBox(
+                                    width: 50,
+                                    height: 50,
+                                    child: SpinKitFadingCircle(
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryColor,
+                                      size: 50,
+                                    ),
+                                  ),
+                                );
+                              }
+                              List<TaskLikeRecord> userPostTaskLikeRecordList =
+                                  snapshot.data!;
+                              // Return an empty Container when the document does not exist.
+                              if (snapshot.data!.isEmpty) {
+                                return Container();
+                              }
+                              final userPostTaskLikeRecord =
+                                  userPostTaskLikeRecordList.isNotEmpty
+                                      ? userPostTaskLikeRecordList.first
+                                      : null;
+                              return Container(
+                                width: MediaQuery.of(context).size.width * 0.94,
+                                decoration: BoxDecoration(),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0, 0, 2, 0),
+                                      child: FutureBuilder<UsersRecord>(
+                                        future: UsersRecord.getDocumentOnce(
+                                            socialFeedFGUserTaskRecord.userID!),
+                                        builder: (context, snapshot) {
+                                          // Customize what your widget looks like when it's loading.
+                                          if (!snapshot.hasData) {
+                                            return Center(
+                                              child: SizedBox(
+                                                width: 50,
+                                                height: 50,
+                                                child: SpinKitFadingCircle(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
                                                       .primaryColor,
-                                              size: 50,
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                      final userInfoUsersRecord =
-                                          snapshot.data!;
-                                      return Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Card(
-                                            clipBehavior:
-                                                Clip.antiAliasWithSaveLayer,
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryColor,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                            ),
-                                            child: Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(1, 1, 1, 1),
-                                              child: Container(
-                                                width: 40,
-                                                height: 40,
-                                                clipBehavior: Clip.antiAlias,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                child: Image.network(
-                                                  userInfoUsersRecord.photoUrl!,
-                                                  fit: BoxFit.fitWidth,
+                                                  size: 50,
                                                 ),
                                               ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Padding(
+                                            );
+                                          }
+                                          final userInfoUsersRecord =
+                                              snapshot.data!;
+                                          return Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Card(
+                                                clipBehavior:
+                                                    Clip.antiAliasWithSaveLayer,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primaryColor,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
+                                                child: Padding(
                                                   padding: EdgeInsetsDirectional
-                                                      .fromSTEB(12, 0, 0, 0),
-                                                  child: Text(
-                                                    userInfoUsersRecord
-                                                        .displayName!,
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyText1,
+                                                      .fromSTEB(1, 1, 1, 1),
+                                                  child: Container(
+                                                    width: 40,
+                                                    height: 40,
+                                                    clipBehavior:
+                                                        Clip.antiAlias,
+                                                    decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                    child: Image.network(
+                                                      userInfoUsersRecord
+                                                          .photoUrl!,
+                                                      fit: BoxFit.fitWidth,
+                                                    ),
                                                   ),
                                                 ),
-                                                FlutterFlowIconButton(
-                                                  borderColor:
-                                                      Colors.transparent,
-                                                  borderRadius: 30,
-                                                  buttonSize: 46,
-                                                  icon: Icon(
-                                                    Icons.keyboard_control,
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .gray600,
-                                                    size: 20,
-                                                  ),
-                                                  onPressed: () {
-                                                    print(
-                                                        'IconButton pressed ...');
-                                                  },
+                                              ),
+                                              Expanded(
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  12, 0, 0, 0),
+                                                      child: Text(
+                                                        userInfoUsersRecord
+                                                            .displayName!,
+                                                        style:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyText1,
+                                                      ),
+                                                    ),
+                                                    FlutterFlowIconButton(
+                                                      borderColor:
+                                                          Colors.transparent,
+                                                      borderRadius: 30,
+                                                      buttonSize: 46,
+                                                      icon: Icon(
+                                                        Icons.keyboard_control,
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .gray600,
+                                                        size: 20,
+                                                      ),
+                                                      onPressed: () {
+                                                        print(
+                                                            'IconButton pressed ...');
+                                                      },
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    FlipCard(
+                                      fill: Fill.fillBack,
+                                      direction: FlipDirection.HORIZONTAL,
+                                      speed: 400,
+                                      front: Container(
+                                        height: 250,
+                                        decoration: BoxDecoration(
+                                          color: FlutterFlowTheme.of(context)
+                                              .cornflowerBlue,
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Align(
+                                              alignment:
+                                                  AlignmentDirectional(0, 0),
+                                              child: Text(
+                                                socialFeedFGUserTaskRecord
+                                                    .title!,
+                                                style:
+                                                    FlutterFlowTheme.of(context)
+                                                        .title1,
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  ),
-                                ),
-                                FlipCard(
-                                  fill: Fill.fillBack,
-                                  direction: FlipDirection.HORIZONTAL,
-                                  speed: 400,
-                                  front: Container(
-                                    height: 250,
-                                    decoration: BoxDecoration(
-                                      color: FlutterFlowTheme.of(context)
-                                          .cornflowerBlue,
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Align(
-                                          alignment: AlignmentDirectional(0, 0),
-                                          child: Text(
-                                            socialFeedFGUserTaskRecord.title!,
-                                            style: FlutterFlowTheme.of(context)
-                                                .title1,
-                                          ),
-                                        ),
-                                        Text(
-                                          socialFeedFGUserTaskRecord
-                                                  .isCompleted!
-                                              ? 'Completed'
-                                              : 'Not Completed',
-                                          style: FlutterFlowTheme.of(context)
-                                              .title3,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  back: Container(
-                                    width: 390,
-                                    height: 250,
-                                    decoration: BoxDecoration(
-                                      color: FlutterFlowTheme.of(context)
-                                          .cornflowerBlue,
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          12, 16, 12, 16),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Align(
-                                            alignment:
-                                                AlignmentDirectional(0, 0),
-                                            child: Text(
+                                            Text(
                                               socialFeedFGUserTaskRecord
-                                                  .description!,
+                                                      .isCompleted!
+                                                  ? 'Completed'
+                                                  : 'Not Completed',
                                               style:
                                                   FlutterFlowTheme.of(context)
                                                       .title3,
                                             ),
+                                          ],
+                                        ),
+                                      ),
+                                      back: Container(
+                                        width: 390,
+                                        height: 250,
+                                        decoration: BoxDecoration(
+                                          color: FlutterFlowTheme.of(context)
+                                              .cornflowerBlue,
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        child: Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  12, 16, 12, 16),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Align(
+                                                alignment:
+                                                    AlignmentDirectional(0, 0),
+                                                child: Text(
+                                                  socialFeedFGUserTaskRecord
+                                                      .description!,
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .title3,
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(12, 0, 12, 0),
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  0, 0, 12, 0),
+                                                      child: Text(
+                                                        socialFeedFGUserTaskRecord
+                                                            .datetime!
+                                                            .toString(),
+                                                        style:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .title3,
+                                                      ),
+                                                    ),
+                                                    if (socialFeedFGUserTaskRecord
+                                                            .location !=
+                                                        null)
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(12, 0,
+                                                                    0, 0),
+                                                        child: Text(
+                                                          socialFeedFGUserTaskRecord
+                                                              .location!
+                                                              .toString(),
+                                                          style: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .title3,
+                                                        ),
+                                                      ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    12, 0, 12, 0),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                Text(
-                                                  socialFeedFGUserTaskRecord
-                                                      .datetime!
-                                                      .toString(),
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .title3,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0, 4, 8, 0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(0, 0, 16, 0),
+                                                child: InkWell(
+                                                  onTap: () async {
+                                                    if (socialFeedFGUserTaskRecord
+                                                            .isLIked! &&
+                                                        !(userPostTaskLikeRecord !=
+                                                            null)) {
+                                                      final taskLikeCreateData =
+                                                          {
+                                                        ...createTaskLikeRecordData(
+                                                          userID:
+                                                              currentUserReference,
+                                                          userTaskID:
+                                                              socialFeedFGUserTaskRecord
+                                                                  .reference,
+                                                        ),
+                                                        'createdDatetime':
+                                                            FieldValue
+                                                                .serverTimestamp(),
+                                                      };
+                                                      await TaskLikeRecord
+                                                          .collection
+                                                          .doc()
+                                                          .set(
+                                                              taskLikeCreateData);
+
+                                                      final userTaskUpdateData =
+                                                          {
+                                                        'amountOfLikes':
+                                                            FieldValue
+                                                                .increment(1),
+                                                      };
+                                                      await socialFeedFGUserTaskRecord
+                                                          .reference
+                                                          .update(
+                                                              userTaskUpdateData);
+                                                    } else {
+                                                      await userPostTaskLikeRecord!
+                                                          .reference
+                                                          .delete();
+
+                                                      final userTaskUpdateData =
+                                                          {
+                                                        'amountOfLikes':
+                                                            FieldValue
+                                                                .increment(
+                                                                    -(1)),
+                                                      };
+                                                      await socialFeedFGUserTaskRecord
+                                                          .reference
+                                                          .update(
+                                                              userTaskUpdateData);
+                                                    }
+                                                  },
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    children: [
+                                                      ToggleIcon(
+                                                        onPressed: () async {
+                                                          final userTaskUpdateData =
+                                                              {
+                                                            'isLIked':
+                                                                !socialFeedFGUserTaskRecord
+                                                                    .isLIked!,
+                                                          };
+                                                          await socialFeedFGUserTaskRecord
+                                                              .reference
+                                                              .update(
+                                                                  userTaskUpdateData);
+                                                        },
+                                                        value:
+                                                            socialFeedFGUserTaskRecord
+                                                                .isLIked!,
+                                                        onIcon: Icon(
+                                                          Icons
+                                                              .favorite_rounded,
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primaryColor,
+                                                          size: 25,
+                                                        ),
+                                                        offIcon: Icon(
+                                                          Icons.favorite_border,
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .grayIcon,
+                                                          size: 25,
+                                                        ),
+                                                      ),
+                                                      if (socialFeedFGUserTaskRecord
+                                                              .amountOfLikes! >
+                                                          0)
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(4,
+                                                                      0, 0, 0),
+                                                          child: Text(
+                                                            socialFeedFGUserTaskRecord
+                                                                .amountOfLikes!
+                                                                .toString(),
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyText2,
+                                                          ),
+                                                        ),
+                                                    ],
+                                                  ),
                                                 ),
-                                                Text(
-                                                  socialFeedFGUserTaskRecord
-                                                      .location!
-                                                      .toString(),
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .title3,
+                                              ),
+                                            ],
+                                          ),
+                                          if (socialFeedFGUserTaskRecord
+                                                  .scope! >=
+                                              2)
+                                            Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(4, 0, 0, 0),
+                                              child: InkWell(
+                                                onTap: () async {
+                                                  if (socialFeedFGUserTaskRecord
+                                                          .userList!
+                                                          .toList()
+                                                          .length <
+                                                      socialFeedFGUserTaskRecord
+                                                          .userLimit!) {
+                                                    if (socialFeedFGUserTaskRecord
+                                                            .isJoinable! &&
+                                                        socialFeedFGUserTaskRecord
+                                                            .userList!
+                                                            .toList()
+                                                            .contains(
+                                                                currentUserReference)) {
+                                                      final taskSubjectUpdateData =
+                                                          {
+                                                        'subjectMemberList':
+                                                            FieldValue
+                                                                .arrayUnion([
+                                                          currentUserReference
+                                                        ]),
+                                                      };
+                                                      await socialFeedFGUserTaskRecord
+                                                          .taskSubjectID!
+                                                          .update(
+                                                              taskSubjectUpdateData);
+
+                                                      final userTaskUpdateData =
+                                                          {
+                                                        'userList': FieldValue
+                                                            .arrayUnion([
+                                                          currentUserReference
+                                                        ]),
+                                                      };
+                                                      await socialFeedFGUserTaskRecord
+                                                          .reference
+                                                          .update(
+                                                              userTaskUpdateData);
+                                                    } else {
+                                                      final taskSubjectUpdateData =
+                                                          {
+                                                        'subjectMemberList':
+                                                            FieldValue
+                                                                .arrayRemove([
+                                                          currentUserReference
+                                                        ]),
+                                                      };
+                                                      await socialFeedFGUserTaskRecord
+                                                          .taskSubjectID!
+                                                          .update(
+                                                              taskSubjectUpdateData);
+
+                                                      final userTaskUpdateData =
+                                                          {
+                                                        'userList': FieldValue
+                                                            .arrayRemove([
+                                                          currentUserReference
+                                                        ]),
+                                                      };
+                                                      await socialFeedFGUserTaskRecord
+                                                          .reference
+                                                          .update(
+                                                              userTaskUpdateData);
+                                                    }
+                                                  } else {
+                                                    await showDialog(
+                                                      context: context,
+                                                      builder:
+                                                          (alertDialogContext) {
+                                                        return AlertDialog(
+                                                          title: Text(
+                                                              'At Capacity'),
+                                                          content: Text(
+                                                              'Too many people have joined this task!'),
+                                                          actions: [
+                                                            TextButton(
+                                                              onPressed: () =>
+                                                                  Navigator.pop(
+                                                                      alertDialogContext),
+                                                              child: Text('Ok'),
+                                                            ),
+                                                          ],
+                                                        );
+                                                      },
+                                                    );
+                                                  }
+                                                },
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  45, 0, 0, 0),
+                                                      child: ToggleIcon(
+                                                        onPressed: () async {
+                                                          final userTaskUpdateData =
+                                                              {
+                                                            'isJoinable':
+                                                                !socialFeedFGUserTaskRecord
+                                                                    .isJoinable!,
+                                                          };
+                                                          await socialFeedFGUserTaskRecord
+                                                              .reference
+                                                              .update(
+                                                                  userTaskUpdateData);
+                                                        },
+                                                        value:
+                                                            socialFeedFGUserTaskRecord
+                                                                .isJoinable!,
+                                                        onIcon: Icon(
+                                                          Icons
+                                                              .playlist_add_check_outlined,
+                                                          color:
+                                                              Color(0xFF70A288),
+                                                          size: 25,
+                                                        ),
+                                                        offIcon: Icon(
+                                                          Icons.playlist_add,
+                                                          color:
+                                                              Color(0xFF95A1AC),
+                                                          size: 25,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
+                                              ),
                                             ),
-                                          ),
                                         ],
                                       ),
                                     ),
-                                  ),
+                                  ],
                                 ),
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      0, 4, 8, 0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0, 0, 16, 0),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                                ToggleIcon(
-                                                  onPressed: () async {
-                                                    final userTaskUpdateData = {
-                                                      'isLIked':
-                                                          !socialFeedFGUserTaskRecord
-                                                              .isLIked!,
-                                                    };
-                                                    await socialFeedFGUserTaskRecord
-                                                        .reference
-                                                        .update(
-                                                            userTaskUpdateData);
-                                                  },
-                                                  value:
-                                                      socialFeedFGUserTaskRecord
-                                                          .isLIked!,
-                                                  onIcon: Icon(
-                                                    Icons.favorite_rounded,
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primaryColor,
-                                                    size: 25,
-                                                  ),
-                                                  offIcon: Icon(
-                                                    Icons.favorite_border,
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .grayIcon,
-                                                    size: 25,
-                                                  ),
-                                                ),
-                                                if (socialFeedFGUserTaskRecord
-                                                        .amountOfLikes! >
-                                                    0)
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                                4, 0, 0, 0),
-                                                    child: Text(
-                                                      socialFeedFGUserTaskRecord
-                                                          .amountOfLikes!
-                                                          .toString(),
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyText2,
-                                                    ),
-                                                  ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Icon(
-                                            Icons.ios_share,
-                                            color: FlutterFlowTheme.of(context)
-                                                .grayIcon,
-                                            size: 24,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
+                              );
+                            },
                           ),
                         );
                       },

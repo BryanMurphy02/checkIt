@@ -130,9 +130,9 @@ class _NavBarPageState extends State<NavBarPage> {
   @override
   Widget build(BuildContext context) {
     final tabs = {
-      'HomeFeedScreen': HomeFeedScreenWidget(),
       'NewTaskScreen': NewTaskScreenWidget(),
       'mySubjects': MySubjectsWidget(),
+      'HomeFeedScreen': HomeFeedScreenWidget(),
       'InteractionsScreen': InteractionsScreenWidget(),
       'AllChatsScreen': AllChatsScreenWidget(),
     };
@@ -168,14 +168,14 @@ class _NavBarPageState extends State<NavBarPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.home_filled,
+                    Icons.add_circle_sharp,
                     color: currentIndex == 0
                         ? FlutterFlowTheme.of(context).white
                         : FlutterFlowTheme.of(context).davysGrey,
                     size: 24,
                   ),
                   Text(
-                    'Home',
+                    'New ',
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: currentIndex == 0
@@ -192,14 +192,14 @@ class _NavBarPageState extends State<NavBarPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.add_circle_sharp,
+                    currentIndex == 1 ? Icons.view_list : Icons.view_list,
                     color: currentIndex == 1
                         ? FlutterFlowTheme.of(context).white
                         : FlutterFlowTheme.of(context).davysGrey,
-                    size: 24,
+                    size: 32,
                   ),
                   Text(
-                    'New ',
+                    'Subjects',
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: currentIndex == 1
@@ -216,14 +216,14 @@ class _NavBarPageState extends State<NavBarPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    currentIndex == 2 ? Icons.view_list : Icons.view_list,
+                    Icons.home_filled,
                     color: currentIndex == 2
                         ? FlutterFlowTheme.of(context).white
                         : FlutterFlowTheme.of(context).davysGrey,
-                    size: 32,
+                    size: 24,
                   ),
                   Text(
-                    'Subjects',
+                    'Home',
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: currentIndex == 2

@@ -38,6 +38,34 @@ class FFAppState extends ChangeNotifier {
 
     _showAddSubjectField = _value;
   }
+
+  DateTime? _selectedDueDate;
+  DateTime? get selectedDueDate => _selectedDueDate;
+  set selectedDueDate(DateTime? _value) {
+    notifyListeners();
+    if (_value == null) {
+      return;
+    }
+    _selectedDueDate = _value;
+  }
+
+  List<DocumentReference> _userChatList = [];
+  List<DocumentReference> get userChatList => _userChatList;
+  set userChatList(List<DocumentReference> _value) {
+    notifyListeners();
+
+    _userChatList = _value;
+  }
+
+  void addToUserChatList(DocumentReference _value) {
+    notifyListeners();
+    _userChatList.add(_value);
+  }
+
+  void removeFromUserChatList(DocumentReference _value) {
+    notifyListeners();
+    _userChatList.remove(_value);
+  }
 }
 
 LatLng? _latLngFromString(String? val) {

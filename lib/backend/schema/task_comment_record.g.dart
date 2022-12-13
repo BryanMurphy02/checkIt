@@ -21,13 +21,6 @@ class _$TaskCommentRecordSerializer
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object?>[];
     Object? value;
-    value = object.taskCommentID;
-    if (value != null) {
-      result
-        ..add('taskCommentID')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
     value = object.commentText;
     if (value != null) {
       result
@@ -81,10 +74,6 @@ class _$TaskCommentRecordSerializer
       iterator.moveNext();
       final Object? value = iterator.current;
       switch (key) {
-        case 'taskCommentID':
-          result.taskCommentID = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
         case 'commentText':
           result.commentText = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
@@ -120,8 +109,6 @@ class _$TaskCommentRecordSerializer
 
 class _$TaskCommentRecord extends TaskCommentRecord {
   @override
-  final String? taskCommentID;
-  @override
   final String? commentText;
   @override
   final DateTime? createdDatetime;
@@ -137,8 +124,7 @@ class _$TaskCommentRecord extends TaskCommentRecord {
       (new TaskCommentRecordBuilder()..update(updates))._build();
 
   _$TaskCommentRecord._(
-      {this.taskCommentID,
-      this.commentText,
+      {this.commentText,
       this.createdDatetime,
       this.userTaskID,
       this.userID,
@@ -157,7 +143,6 @@ class _$TaskCommentRecord extends TaskCommentRecord {
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is TaskCommentRecord &&
-        taskCommentID == other.taskCommentID &&
         commentText == other.commentText &&
         createdDatetime == other.createdDatetime &&
         userTaskID == other.userTaskID &&
@@ -169,9 +154,7 @@ class _$TaskCommentRecord extends TaskCommentRecord {
   int get hashCode {
     return $jf($jc(
         $jc(
-            $jc(
-                $jc($jc($jc(0, taskCommentID.hashCode), commentText.hashCode),
-                    createdDatetime.hashCode),
+            $jc($jc($jc(0, commentText.hashCode), createdDatetime.hashCode),
                 userTaskID.hashCode),
             userID.hashCode),
         ffRef.hashCode));
@@ -180,7 +163,6 @@ class _$TaskCommentRecord extends TaskCommentRecord {
   @override
   String toString() {
     return (newBuiltValueToStringHelper(r'TaskCommentRecord')
-          ..add('taskCommentID', taskCommentID)
           ..add('commentText', commentText)
           ..add('createdDatetime', createdDatetime)
           ..add('userTaskID', userTaskID)
@@ -193,11 +175,6 @@ class _$TaskCommentRecord extends TaskCommentRecord {
 class TaskCommentRecordBuilder
     implements Builder<TaskCommentRecord, TaskCommentRecordBuilder> {
   _$TaskCommentRecord? _$v;
-
-  String? _taskCommentID;
-  String? get taskCommentID => _$this._taskCommentID;
-  set taskCommentID(String? taskCommentID) =>
-      _$this._taskCommentID = taskCommentID;
 
   String? _commentText;
   String? get commentText => _$this._commentText;
@@ -228,7 +205,6 @@ class TaskCommentRecordBuilder
   TaskCommentRecordBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
-      _taskCommentID = $v.taskCommentID;
       _commentText = $v.commentText;
       _createdDatetime = $v.createdDatetime;
       _userTaskID = $v.userTaskID;
@@ -256,7 +232,6 @@ class TaskCommentRecordBuilder
   _$TaskCommentRecord _build() {
     final _$result = _$v ??
         new _$TaskCommentRecord._(
-            taskCommentID: taskCommentID,
             commentText: commentText,
             createdDatetime: createdDatetime,
             userTaskID: userTaskID,
