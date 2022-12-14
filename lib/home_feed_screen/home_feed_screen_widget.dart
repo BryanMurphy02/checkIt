@@ -1193,12 +1193,18 @@ class _HomeFeedScreenWidgetState extends State<HomeFeedScreenWidget> {
                                                   .fromSTEB(4, 0, 0, 0),
                                               child: InkWell(
                                                 onTap: () async {
-                                                  if (socialFeedFGUserTaskRecord
-                                                          .userList!
-                                                          .toList()
-                                                          .length <
-                                                      socialFeedFGUserTaskRecord
-                                                          .userLimit!) {
+                                                  if ((socialFeedFGUserTaskRecord
+                                                              .userLimit ==
+                                                          0) ||
+                                                      ((socialFeedFGUserTaskRecord
+                                                                  .userList!
+                                                                  .toList()
+                                                                  .length <
+                                                              socialFeedFGUserTaskRecord
+                                                                  .userLimit!) &&
+                                                          (socialFeedFGUserTaskRecord
+                                                                  .userLimit !=
+                                                              0))) {
                                                     if (socialFeedFGUserTaskRecord
                                                             .isJoinable! &&
                                                         socialFeedFGUserTaskRecord
