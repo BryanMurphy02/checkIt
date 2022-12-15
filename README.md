@@ -4,7 +4,7 @@ CheckIt is a task management and social media app that allows users to make and 
 
 ## Getting Started
 
-FlutterFlow projects are built to run on the Flutter _stable_ release.
+In order to run CheckIt, flutter must be intalled on your device. Click [here[(https://docs.flutter.dev/get-started/install) to see the steps to get up and running!
 
 ### IMPORTANT:
 
