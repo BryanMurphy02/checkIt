@@ -1,5 +1,6 @@
 # CheckIt
-
+#
+##Description
 CheckIt is a task management and social media app that allows users to make and track tasks. These tasks can be added to a feed where other users can see allowing them to potentially join in on the task if it permits.
 
 ## Getting Started
