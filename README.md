@@ -4,12 +4,9 @@ CheckIt is a task management and social media app that allows users to make and 
 
 ## Getting Started
 
-In order to run CheckIt, flutter must be intalled on your device. Click [here](https://docs.flutter.dev/get-started/install) to see the steps to get up and running!
-
-### IMPORTANT:
-
-For projects with Firestore integration, you must first run the following commands to ensure the project compiles:
-
+In order to locally run CheckIt there are two requirements:
+1. Install and setup flutter. Steps to do so can be found [here](https://docs.flutter.dev/get-started/install).
+2. Run the following commands below in order to compile
 ```
 flutter pub get
 flutter packages pub run build_runner build --delete-conflicting-outputs
