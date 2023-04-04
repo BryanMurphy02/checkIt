@@ -1,14 +1,22 @@
 # CheckIt
 ## Description
-CheckIt is a task management and social media app that allows users to make and track tasks. These tasks can be added to a feed where other users can see allowing them to potentially join in on the task if it permits.
+CheckIt is a task management and social media mobile app for iOS and Android built with Flutter SDK and Dart. Created tasks can be added to a feed where other users can see allowing them to potentially join in on the task if it permits
 
-## Documentation
-The documentation folder contains the planning and requirements documents that were created in the process of developing CheckIt. The foollowing is contained in Documents folder:
+## Features
+- Task creation and tracking
+- Organize tasks based on subject
+- Collaborate with others by posting tasks onto the home feed
+
+## Development Method and Documentation
+CheckIt was conceputalized and designed using the waterfall software development method. The method uses the main phases of requirements gathering, design, and implementation. The waterfall method alos has a heavy emphasis on documentation. The following is contained in Documents folder:
 - System Requests Document(SRD)
 - System Requirements Specification(SRS)
 - System Design Document(SDD)
 
-## Getting Started
+## Architecture
+CheckIt uses a three layer architecture pattern made up of the UI, domain, and data layer. This architecture ensures seperation of concerns between the different layers and enables efficient communication
+
+## Installation
 
 In order to locally run CheckIt there are two requirements:
 1. Install and setup flutter. Steps to do so can be found [here](https://docs.flutter.dev/get-started/install).
